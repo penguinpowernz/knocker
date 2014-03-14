@@ -1,18 +1,22 @@
 #!/usr/bin/env ruby
 
 require 'knocker'
-require 'fileutils'
 
 name = ARGV[0]
 
 def usage
   <<-EOF
-Usage: nkr <pattern-name>
+Usage: nkr <--edit|pattern-name>
   EOF
 end
 
+if name == "--edit" or name == "-e"
+  system "#{ENV["EDITOR"]} #{Knocker.config}"
+  exit
+end
+
 begin
-  raise ArgumentError, "Must provide pattern name" if name.nil? or name.blank?
+  raise ArgumentError, "Must provide pattern name" if name.nil? or name.empty?
 
   pattern = Knocker.pattern(name)
   system pattern.knock_command
@@ -24,9 +28,8 @@ rescue Knocker::Errors::ConfigNotFound
   print "No config found, create one at #{Knocker.config}? [y/n]: "
   
   if STDIN.gets.match /y/i
-    FileUtils.mkdir_p File.dirname(Knocker.config)
-    FileUtils.touch Knocker.config
-    puts "Created knocker config file"
+    Knocker.create_config
+    puts "Created knocker config file (use --edit to edit it)"
   else
     abort "No config file... quitting"
   end

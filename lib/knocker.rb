@@ -2,6 +2,7 @@ require "knocker/version"
 require "knocker/errors"
 require "knocker/parser"
 require "knocker/pattern"
+require 'fileutils'
 
 module Knocker
   class << self
@@ -10,7 +11,21 @@ module Knocker
     end
 
     def pattern(name)
-      Knocker::Parser.new(config).find(name).to_hash
+      config_exists!
+      Knocker::Parser.new(File.read(config)).find(name)
+    end
+
+    def config_exists?
+      File.exist? config
+    end
+
+    def config_exists!
+      raise Knocker::Errors::ConfigNotFound unless config_exists?
+    end
+
+    def create_config
+      FileUtils.mkdir_p File.dirname(Knocker.config)
+      FileUtils.touch Knocker.config
     end
   end
 end

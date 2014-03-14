@@ -1,8 +1,9 @@
 module Knocker
   class Parser
     def initialize(config)
-      raise Knocker::Errors::ConfigNotFound unless File.exist? config
-      @config = File.read(config).reject! {|line| line.start_with? "#"}
+      @config = config.lines.reject { |line|
+        line.start_with? "#"
+      }.join("")
     end
 
     def find(name)
@@ -13,7 +14,7 @@ module Knocker
     private
 
     def has_pattern!(name)
-      raise Knocker::Errors::PatterNotFound unless 
+      raise Knocker::Errors::PatternNotFound unless 
         @config.include? "pattern #{name}"
     end
 
