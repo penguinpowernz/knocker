@@ -1,22 +1,22 @@
 require 'spec_helper'
 
 describe Knocker::Parser do
+  let(:parser) { Knocker::Parser.new(config) }
 
   it "should recognise a pattern" do
-    expect {
-      Knocker::Parser.new(config).find("pvtchatops")
-    }.to_not raise_error
+    expect { parser.find("pvtchatops") }.to_not raise_error
   end
 
   it "should return a pattern object" do
-    expect(
-      Knocker::Parser.new(config).find("pvtchatops")
-    ).to be_a Knocker::Pattern
+    expect(parser.find("pvtchatops")).to be_a Knocker::Pattern
   end
 
   it "should return a pattern object with the correct name" do
-    p = Knocker::Parser.new(config).find("pvtchatops")
-    expect(p.name).to eq "pvtchatops"
+    expect(parser.find("pvtchatops").name).to eq "pvtchatops"
+  end
+
+  it "should raise PatternNotFound for non-existent pattern" do
+    expect{parser.find("wut!")}.to raise_error Knocker::Errors::PatternNotFound
   end
 
 end

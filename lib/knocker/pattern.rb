@@ -17,7 +17,8 @@ module Knocker
 
     def host
       host = @text.scan(/  h (.*)/).flatten.first
-      raise Knocker::Errors::NoHostSpecified if host.nil? or host.blank?
+      raise Knocker::Errors::NoHostSpecified if host.nil? or host.empty?
+      host
     end
 
     def knock_command
@@ -34,9 +35,9 @@ module Knocker
     end
 
     def post_commands
-      cmds = @text.scan(/^  c (.*)$/)
+      cmds = @text.scan(/^  c (.*)$/).flatten
       cmds.map! do |cmd|
-        cmd.gsub! /\$host/, host
+        cmd.gsub(/\$host/, host)
       end
     end
 

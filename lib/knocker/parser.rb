@@ -20,7 +20,8 @@ module Knocker
 
     def extract(name)
       start = @config.split("\n").index("pattern #{name}")
-
+      start+= 1
+      
       @config.split("\n")[start..-1].collect { |line|
         break if line.empty?
         line
