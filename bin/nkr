@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'knocker'
+require 'fileutils'
+
+name = argv[0]
+
+begin
+  pattern = Knocker.pattern(name)
+  system pattern.knock_command
+  
+  pattern.post_commands.each do |cmd|
+    system cmd
+  end
+rescue Knocker::Errors::ConfigNotFound
+  print "No config found, create one at #{Knocker.config}? [y/n]: "
+  FileUtils.touch Knocker.config if STDIN.gets.match /y/i
+rescue Knocker::Errors::PatternNotFound
+  abort "No such pattern #{name}"
+rescue Knocker::Errors::NoHostSpecified
+  abort "No host specified in pattern #{name}"
+rescue Knocker::Errors::NoKnockSpecified
+  abort "No port-knocks specified in pattern #{name}"
+rescue Knocker::Errors::InvalidProtocol => e
+  abort "Invalid protocol #{e.message} in pattern #{name}"
+rescue Knocker::Errors::InvalidPort => e
+  abort "Invalid port #{e.message} in pattern #{name}"
+end
