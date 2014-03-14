@@ -1,4 +1,7 @@
 require "knocker/version"
+require "knocker/errors"
+require "knocker/parser"
+require "knocker/pattern"
 
 module Knocker
   

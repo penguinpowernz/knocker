@@ -16,24 +16,38 @@ module Knocker
     end
 
     def host
-      host = @text.lines.collect { |line|
-        match = line.match(/^  h (.*)$/)
-        next if match.nil?
-        match[1]
-        break
-      }.join("")
-
+      host = @text.scan(/  h (.*)/).flatten.first
       raise Knocker::Errors::NoHostSpecified if host.nil? or host.blank?
     end
 
     def knock_command
       patterns = []
 
-      @text.scan(/  ([ut]) (\d+)/) do |proto, port|
-        patterns << "#{port}:#{proto}"
+      patterns = @text.scan(/  ([ut]) (\d+)/).collect do |proto, port|
+        valid_port!(port)
+        "#{port}:#{protocol!(proto)}"
       end
 
+      raise Knocker::Errors::NoKnockSpecified if patterns.empty?
+
       "knock #{host} #{patterns.join(" ")}"
+    end
+
+    def post_commands
+      @text.scan(/^  c (.*)$/)
+    end
+
+    private
+
+    def protocol!(char)
+      return "udp" if char == "u"
+      return "tcp" if char == "t"
+      raise Knocker::Errors::InvalidProtocol, char
+    end
+
+    def valid_port!(port)
+      raise Errors::InvalidPort, port if port.to_i.zero?
+      raise Errors::InvalidPort, port if port.to_i > 65535
     end
   end
 end
