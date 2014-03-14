@@ -3,7 +3,7 @@
 require 'knocker'
 require 'fileutils'
 
-name = argv[0]
+name = ARGV[0]
 
 begin
   pattern = Knocker.pattern(name)
