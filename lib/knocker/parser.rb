@@ -2,7 +2,7 @@ module Knocker
   class Parser
     def initialize(config)
       raise Knocker::Errors::ConfigNotFound unless File.exist? config
-      @config = File.read(config)
+      @config = File.read(config).reject! {|line| line.start_with? "#"}
     end
 
     def find(name)
