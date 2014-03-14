@@ -34,7 +34,10 @@ module Knocker
     end
 
     def post_commands
-      @text.scan(/^  c (.*)$/)
+      cmds = @text.scan(/^  c (.*)$/)
+      cmds.map! do |cmd|
+        cmd.gsub! /\$host/, host
+      end
     end
 
     private
