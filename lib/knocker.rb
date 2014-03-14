@@ -4,13 +4,13 @@ require "knocker/parser"
 require "knocker/pattern"
 
 module Knocker
-  
-  def config
-    "#{ENV["HOME"]}/.config/knocker/config"
-  end
+  class << self
+    def config
+      "#{ENV["HOME"]}/.config/knocker/config"
+    end
 
-  def pattern(name)
-    Knocker::Parser.new(config).find(name).to_hash
+    def pattern(name)
+      Knocker::Parser.new(config).find(name).to_hash
+    end
   end
-
 end
