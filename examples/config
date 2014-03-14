@@ -1,0 +1,18 @@
+# Knocker config file
+
+# pattern name
+#   u udp_port knock_count
+#   t tcp_port knock_count
+#   c command to run
+
+# pattern vps1ssh
+#   u 4444 3
+#   t 3333 4
+#   u 7685 2
+#   c ssh usavps01
+
+# pattern chatops
+#   u 2456 4
+#   t 6767 5
+#   t 2245 3
+#   c xchat irc://my.private.irc:26777/chatops
