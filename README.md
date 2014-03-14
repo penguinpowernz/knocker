@@ -49,7 +49,7 @@ pattern pvtchatops
   u 5445
   t 4456
   t 63854
-  c xchat --url=irc://myvps.example.com:36777/chatops
+  c xchat --url=irc://$host:36777/chatops
 ```
 
 So when you run `nkr pvtchatops` it actually runs two commands:
@@ -63,10 +63,12 @@ Easy!
 
 As you saw, the config syntax is simple.
 
+* use pattern and a name to name the pattern
 * h and then the hostname/ip to connect to
 * t and the port number for a tcp knock (multiples allowed)
 * u and the port number for a udp knock (multiples allowed)
 * c and the command to run after knocking (multiples allowed)
+* on command lines use $host to use host defined for the pattern
 
 **Mix this with SSH config files and you will an unstoppable sysadmin!**
 
