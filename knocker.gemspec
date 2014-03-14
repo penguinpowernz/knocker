@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Knocker::VERSION
   spec.authors       = ["Robert McLeod"]
   spec.email         = ["robert@penguinpower.co.nz"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Uses stored config to knocks on knock daemons}
+  spec.description   = %q{Uses a config file to knock on a host and execute command(s), tries to mimic .ssh/config function}
+  spec.homepage      = "https://github.com/penguinpowernz/knocker"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
