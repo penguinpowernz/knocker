@@ -5,7 +5,15 @@ require 'fileutils'
 
 name = ARGV[0]
 
+def usage
+  <<-EOF
+Usage: nkr <pattern-name>
+  EOF
+end
+
 begin
+  raise ArgumentError, "Must provide pattern name" if name.nil? or name.blank?
+
   pattern = Knocker.pattern(name)
   system pattern.knock_command
   
@@ -14,15 +22,25 @@ begin
   end
 rescue Knocker::Errors::ConfigNotFound
   print "No config found, create one at #{Knocker.config}? [y/n]: "
-  FileUtils.touch Knocker.config if STDIN.gets.match /y/i
+  
+  if STDIN.gets.match /y/i
+    FileUtils.mkdir_p File.dirname(Knocker.config)
+    FileUtils.touch Knocker.config
+    puts "Created knocker config file"
+  else
+    abort "No config file... quitting"
+  end
+rescue ArgumentError => e
+  puts "ERROR: #{e.message}"
+  abort usage
 rescue Knocker::Errors::PatternNotFound
-  abort "No such pattern #{name}"
+  abort "ERROR: No such pattern #{name}"
 rescue Knocker::Errors::NoHostSpecified
-  abort "No host specified in pattern #{name}"
+  abort "ERROR: No host specified in pattern #{name}"
 rescue Knocker::Errors::NoKnockSpecified
-  abort "No port-knocks specified in pattern #{name}"
+  abort "ERROR: No port-knocks specified in pattern #{name}"
 rescue Knocker::Errors::InvalidProtocol => e
-  abort "Invalid protocol #{e.message} in pattern #{name}"
+  abort "ERROR: Invalid protocol #{e.message} in pattern #{name}"
 rescue Knocker::Errors::InvalidPort => e
-  abort "Invalid port #{e.message} in pattern #{name}"
+  abort "ERROR: Invalid port #{e.message} in pattern #{name}"
 end
