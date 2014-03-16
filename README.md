@@ -18,13 +18,37 @@ Or install it yourself as:
 
     $ gem install knocker
 
+## Requirements
+
+* a server with a configured knock daemon (such as [knockd](http://www.zeroflux.org/projects/knock))
+* the included port-knock client (`knock`)
+
 ## Usage
 
-Like an SSH config is powerful for connecting to SSH daemons:
+Define knock patterns in your config file (at `~/.config/knocker`) by using `nkr -e` and then run them using `nkr pattern-name`.  Your pattern defines the host, the knock sequence and any commands to run after knocking.
+
+Running `nkr` with a pattern name sends the knock sequence to the host then runs the specified commands.  This allows one to easily knock on a host to open an SSH port and then run the command to SSH into the host.
+
+With a knock daemon configured on `host.example.com` to open port 22 (SSH) when it hears knocks on UDP ports 3333, 2424 and 22388, one could configure a pattern as such:
+
+```
+pattern hiddenssh
+  h host.example.com
+  u 3333
+  u 2424
+  u 22388
+  ssh robert@$host
+```
+
+So that running `nkr hiddenssh` knocks and opens the SSH port, then connects to SSH.  Then the knock daemon can close the port behind you.
+
+### Configuration Syntax
+
+Like an SSH config file is powerful for connecting to SSH daemons:
 
 ```
 # SSH config file
-Host myvps
+Host myvps # simply type ssh myvps at command prompt
   Hostname vps.example.com
   User robert
   Port 22022
@@ -35,7 +59,7 @@ Host myvps
 
 I want knocker to be powerful for connecting to knock daemons:
 
-Each config file stores knock patterns which include:
+The config file stores knock patterns which include:
 
 * hostname
 * knock specs
@@ -44,7 +68,7 @@ Each config file stores knock patterns which include:
 ```
 # Knocker config file
 # keep this secret, knock patterns are almost like passwords
-pattern pvtchatops
+pattern pvtchatops # simply type nkr pvtchatops at command prompt
   host myvps.example.com
   u 5445
   t 4456
